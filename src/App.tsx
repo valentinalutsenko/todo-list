@@ -4,6 +4,8 @@ import { v1 } from "uuid";
 import TodoList from "./components/TaskList";
 import { task1 } from "./assets/tasks/tasks";
 
+import "./App.css";
+
 const initionState = task1;
 
 export type FilterValueType = "all" | "complited" | "active";
@@ -25,11 +27,25 @@ function App() {
   };
 
   const addTask = (title: string) => {
-    if (title !== "") {
-      let newTask = { id: v1(), title: title, isDone: false };
-      let newTasks = [newTask, ...task1];
-      setTask1(newTasks);
+    let newTask = { id: v1(), title: title, isDone: false };
+    let newTasks = [newTask, ...task1];
+    setTask1(newTasks);
+  };
+
+  const changeStatus = (taskId: string, isDone: boolean) => {
+    let task = task1.find((t) => {
+      if (t.id === taskId) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    if (task) {
+      task.isDone = isDone;
     }
+    let copyTask = [...task1];
+    setTask1(copyTask);
   };
 
   let filterForTask = task1;
@@ -45,11 +61,13 @@ function App() {
   return (
     <div className="App">
       <TodoList
+        changeStatus={changeStatus}
         title="What to learn"
         task={filterForTask}
         taskRes={removeTask}
         changeFilter={changeFilter}
         addTask={addTask}
+        filter={filter}
       />
     </div>
   );
